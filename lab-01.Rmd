@@ -253,8 +253,19 @@ _How many tourist attractions are there in each of the 4 nations? From this, dis
 
 
 ```{r Ex_l}
-#________ %>%
-#  ______(_______)
+nation_with_attraction <- visitors %>%
+  mutate(
+    nation = case_when(
+      region == "Northern Island" ~ "Northern Ireland",
+      region == "Scotland" ~ "Scotland",
+      region == "Wales" ~ "Wales",
+      TRUE ~ "England"
+    ) 
+  )
+
+nation_with_attraction %>%
+  count(nation)
+  
 ```
 
 
@@ -267,7 +278,19 @@ _Within each of the 4 nations, what is the proportion of tourist attractions tha
 
 ```{r Ex_m}
 # Write your code here
+visitors_w_nation <- visitors %>%
+  mutate(
+    nation = case_when(
+      region == "Northern Island" ~ "Northern Island",
+      region == "Scotland" ~ "Scotland",
+      region == "Wales" ~ "Wales",
+      TRUE ~ "England"
+    )
+  )
 
+visitors_w_nation %>%
+  filter(admission == "Free") %>%
+    count(nation)
 
 ```
 
@@ -278,7 +301,24 @@ _Calculate the percentage change in visitor admissions from 2021 to 2022. Of the
 
 ```{r Ex_n}
 # Write your code here
+visitors %>%
+  mutate(
+    nation = case_when(
+      region == "Scotland" ~ "Scotland",
+      region == "Northern Island" ~ "Northern Island",
+      region == "Wales" ~ "Wales",
+      TRUE ~ "England"
+    )
+  )
 
-
-
+visitors %>%
+  filter(region == "Scotland") %>%
+  group_by(admission) %>%
+    summarise(
+      pct_change = 
+        (sum(n_2022,na.rm = TRUE)-sum(n_2021,na.rm = TRUE))*100/sum(n_2021,na.rm = TRUE)
+      ) %>%
+  arrange(pct_change)
+  
+    
 ```
